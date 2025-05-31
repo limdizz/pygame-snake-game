@@ -37,6 +37,9 @@ snake_speed = 5
 # SOUNDS
 snake_start_sound = pygame.mixer.Sound('audio/snake_start.mp3')
 snake_end_sound = pygame.mixer.Sound('audio/snake_end.mp3')
+snake_hiss_ce_sound = pygame.mixer.Sound('audio/snake_hiss_ce.ogg')
+snake_hiss_mh_sound = pygame.mixer.Sound('audio/snake_hiss_mh.ogg')
+
 
 def draw_hearts():
     total_width = hearts_remaining * 40
@@ -253,6 +256,9 @@ def game(mode):
             if mode == "M":
                 # In this mode the score counter increases in an arithmetic progression
                 growth_step += 2
+                snake_hiss_mh_sound.play()
+            if mode == "C":
+                snake_hiss_ce_sound.play()
 
             # The snake speed increases with every eaten food
             if snake_speed < 60 and mode == "C":
