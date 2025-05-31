@@ -34,6 +34,9 @@ score_font = pygame.font.SysFont("Comic Sans MS", 25)
 snake_block = 10
 snake_speed = 5
 
+# SOUNDS
+snake_start_sound = pygame.mixer.Sound('audio/snake_start.mp3')
+snake_end_sound = pygame.mixer.Sound('audio/snake_end.mp3')
 
 def draw_hearts():
     total_width = hearts_remaining * 40
@@ -105,8 +108,10 @@ def game_intro():
                 quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_c:
+                    snake_start_sound.play()
                     game("C")
                 elif event.key == pygame.K_m:
+                    snake_start_sound.play()
                     game("M")
                 elif event.key == pygame.K_q:
                     pygame.quit()
@@ -205,10 +210,9 @@ def game(mode):
             if x1 >= screen_width or x1 < 0 or y1 >= screen_height or y1 < 0:
                 border_counter += 1
                 hearts_remaining -= 1
-                if hearts_remaining <= 0:
+                if hearts_remaining <= 0 or border_counter >= 3:
                     game_close = True
-            if border_counter >= 3:
-                game_close = True
+                    snake_end_sound.play()
 
             screen.fill(black)
             draw_hearts()
@@ -223,6 +227,7 @@ def game(mode):
 
             if x1 >= screen_width or x1 < 0 or y1 >= screen_height or y1 < 0:
                 game_close = True
+                snake_end_sound.play()
 
         our_snake(snake_block, snake_list)
         snake_head = [x1, y1]
@@ -234,6 +239,7 @@ def game(mode):
         for x in snake_list[:-1]:
             if x == snake_head:
                 game_close = True
+                snake_end_sound.play()
 
         your_score(length_of_snake - 1)
         high_score_display(high_score)
@@ -243,6 +249,7 @@ def game(mode):
             food_y = round(random.randrange(60, screen_height - 60) / 10.0) * 10.0
 
             length_of_snake += growth_step
+
             if mode == "M":
                 # In this mode the score counter increases in an arithmetic progression
                 growth_step += 2
