@@ -40,6 +40,10 @@ snake_end_sound = pygame.mixer.Sound('audio/snake_end.mp3')
 snake_hiss_ce_sound = pygame.mixer.Sound('audio/snake_hiss_ce.ogg')
 snake_hiss_mh_sound = pygame.mixer.Sound('audio/snake_hiss_mh.ogg')
 
+# MUSIC
+music_ce = 'audio/music_ce.ogg'
+music_mh = 'audio/music_mh.ogg'
+
 
 def draw_hearts():
     total_width = hearts_remaining * 40
@@ -112,9 +116,15 @@ def game_intro():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_c:
                     snake_start_sound.play()
+                    pygame.mixer.music.load(music_ce)
+                    pygame.mixer.music.set_volume(0.5)
+                    pygame.mixer.music.play(-1)
                     game("C")
                 elif event.key == pygame.K_m:
                     snake_start_sound.play()
+                    pygame.mixer.music.load(music_mh)
+                    pygame.mixer.music.set_volume(0.5)
+                    pygame.mixer.music.play(-1)
                     game("M")
                 elif event.key == pygame.K_q:
                     pygame.quit()
@@ -145,10 +155,20 @@ def game(mode):
 
     high_score = load_high_score(mode)
 
+    if mode == "C":
+        pygame.mixer.music.load(music_ce)
+        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.play(-1)
+    else:
+        pygame.mixer.music.load(music_mh)
+        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.play(-1)
+
     while not game_over:
         while game_close:
             screen.fill(black)
             message("Unfortunately, you lost! Press R to restart or Q to quit the game", red)
+            pygame.mixer.music.stop()
             your_score(length_of_snake - 1)
             high_score_display(high_score)
             pygame.display.update()
