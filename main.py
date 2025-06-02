@@ -113,6 +113,7 @@ def game_intro():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_c:
                     snake_start_sound.play()
@@ -120,12 +121,14 @@ def game_intro():
                     pygame.mixer.music.set_volume(0.5)
                     pygame.mixer.music.play(-1)
                     game("C")
+
                 elif event.key == pygame.K_m:
                     snake_start_sound.play()
                     pygame.mixer.music.load(music_mh)
                     pygame.mixer.music.set_volume(0.5)
                     pygame.mixer.music.play(-1)
                     game("M")
+
                 elif event.key == pygame.K_q:
                     pygame.quit()
                     quit()
@@ -167,7 +170,7 @@ def game(mode):
     while not game_over:
         while game_close:
             screen.fill(black)
-            message("Unfortunately, you lost! Press R to restart or Q to quit the game", red)
+            message("You lost! Press R to restart, M to exit to main menu or Q to quit", red)
             pygame.mixer.music.stop()
             your_score(length_of_snake - 1)
             high_score_display(high_score)
@@ -184,6 +187,11 @@ def game(mode):
                         snake_speed = 5
                         hearts_remaining = 3
                         game(mode)
+
+                    if event.key == pygame.K_m:
+                        snake_speed = 5
+                        hearts_remaining = 3
+                        game_intro()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -277,6 +285,7 @@ def game(mode):
                 # In this mode the score counter increases in an arithmetic progression
                 growth_step += 2
                 snake_hiss_mh_sound.play()
+
             if mode == "C":
                 snake_hiss_ce_sound.play()
 
