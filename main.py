@@ -102,6 +102,24 @@ def draw_boundaries():
     pygame.draw.rect(screen, green, [screen_width - snake_block, 0, snake_block, screen_height])  # right boundary
 
 
+def pause():
+    paused = True
+    while paused:
+        pygame.mixer.music.pause()
+        msg = font_style.render('Paused. Press Space or Esc to continue', True, white)
+        screen.blit(msg, [screen_width / 2 - msg.get_width() / 2, screen_height / 3])
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE or event.key == pygame.K_ESCAPE:
+                    paused = False
+                    pygame.mixer.music.unpause()
+        pygame.display.update()
+        clock.tick(15)
+
+
 def game_intro():
     intro = True
     while intro:
@@ -218,6 +236,9 @@ def game(mode):
                         and y1_change != -snake_block):
                     x1_change = 0
                     y1_change = snake_block
+
+                if event.key == pygame.K_SPACE or event.key == pygame.K_ESCAPE:
+                    pause()
 
                 if event.key == pygame.K_q:
                     pygame.quit()
