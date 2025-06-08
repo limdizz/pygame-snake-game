@@ -106,8 +106,9 @@ def pause():
     paused = True
     while paused:
         pygame.mixer.music.pause()
-        msg = font_style.render('Paused. Press Space or Esc to continue', True, white)
-        screen.blit(msg, [screen_width / 2 - msg.get_width() / 2, screen_height / 3])
+        pause_button = pygame.image.load('images/pause.png')
+        pause_rect = pause_button.get_rect(center=(screen_width // 2, screen_height // 2))
+        screen.blit(pause_button, pause_rect)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -116,6 +117,9 @@ def pause():
                 if event.key == pygame.K_SPACE or event.key == pygame.K_ESCAPE:
                     paused = False
                     pygame.mixer.music.unpause()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                paused = False
+                pygame.mixer.music.unpause()
         pygame.display.update()
         clock.tick(15)
 
@@ -243,6 +247,9 @@ def game(mode):
                 if event.key == pygame.K_q:
                     pygame.quit()
                     quit()
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                pause()
 
         if x1 >= screen_width:
             x1 = 0
