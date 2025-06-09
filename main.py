@@ -159,6 +159,7 @@ def game_intro():
 def game(mode):
     game_over = False
     game_close = False
+    new_high_score = False
 
     border_counter = 0
 
@@ -196,6 +197,21 @@ def game(mode):
             pygame.mixer.music.stop()
             your_score(length_of_snake - 1)
             high_score_display(high_score)
+            if new_high_score:
+                screen.fill(black)
+
+                choice_msg = font_style.render("Press R to restart, M to exit to main menu or Q to quit", True, white)
+                choice_msg_rect = choice_msg.get_rect(center=(screen_width // 2, screen_height // 2 + 80))
+                screen.blit(choice_msg, choice_msg_rect)
+
+                new_high_score_msg = score_font.render("NEW HIGH SCORE!", True, red)
+                new_high_score_msg_rect = new_high_score_msg.get_rect(center=(screen_width // 2 - 10,
+                                                                              screen_height // 2 - 40))
+                screen.blit(new_high_score_msg, new_high_score_msg_rect)
+
+                score_msg = score_font.render('Score: ' + str(high_score), True, red)
+                score_msg_rect = score_msg.get_rect(center=(screen_width // 2 - 10, screen_height // 2 + 20))
+                screen.blit(score_msg, score_msg_rect)
             pygame.display.update()
 
             for event in pygame.event.get():
@@ -328,6 +344,7 @@ def game(mode):
         if length_of_snake - 1 > high_score:
             high_score = length_of_snake - 1
             save_high_score(high_score, mode)
+            new_high_score = True
 
         clock.tick(snake_speed)
 
