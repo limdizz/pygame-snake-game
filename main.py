@@ -14,8 +14,8 @@ aqua = (0, 255, 255)
 purple = (255, 0, 255)
 
 # SCREEN SETTINGS
-screen_width = 600
-screen_height = 400
+screen_width = 800
+screen_height = 600
 screen = pygame.display.set_mode((screen_width, screen_height))
 
 snake_icon = pygame.image.load("images/snake.ico")
@@ -27,8 +27,8 @@ heart_image = pygame.transform.scale(heart_image, (25, 25))
 hearts_remaining = 3
 
 # FONT SETTINGS
-font_style = pygame.font.SysFont("Times New Roman", 15)
-score_font = pygame.font.SysFont("Comic Sans MS", 25)
+font_style = pygame.font.SysFont("TDAText", 15)
+score_font = pygame.font.SysFont("TDAText", 25)
 
 # SNAKE SETTINGS
 snake_block = 10
