@@ -90,9 +90,15 @@ def our_snake(snake_block, snake_list):
         pygame.draw.rect(screen, white, [x[0], x[1], snake_block, snake_block])
 
 
-def message(msg, color):
-    mes = font_style.render(msg, True, color)
-    screen.blit(mes, [screen_width / 5, screen_height / 2.5])
+def message(msg, font_size, color, x_offset=0, y_offset=0):
+    if font_size == 15:
+        mes = font_style.render(msg, True, color)
+    elif font_size == 25:
+        mes = score_font.render(msg, True, color)
+    else:
+        raise ValueError(f"Unsupported font size: {font_size}")
+    mes_rect = mes.get_rect(center=(screen_width // 2 + x_offset, screen_height // 2 + y_offset))
+    screen.blit(mes, mes_rect)
 
 
 def draw_boundaries():
@@ -128,7 +134,7 @@ def game_intro():
     intro = True
     while intro:
         screen.fill(black)
-        message("Press C for classic easy mode or M for modern hard mode", white)
+        message("Press C for classic easy mode or M for modern hard mode", 15, white)
         pygame.display.update()
 
         for event in pygame.event.get():
@@ -193,25 +199,15 @@ def game(mode):
     while not game_over:
         while game_close:
             screen.fill(black)
-            message("You lost! Press R to restart, M to exit to main menu or Q to quit", red)
+            message("You lost! Press R to restart, M to exit to main menu or Q to quit", 15, red)
             pygame.mixer.music.stop()
             your_score(length_of_snake - 1)
             high_score_display(high_score)
             if new_high_score:
                 screen.fill(black)
-
-                choice_msg = font_style.render("Press R to restart, M to exit to main menu or Q to quit", True, white)
-                choice_msg_rect = choice_msg.get_rect(center=(screen_width // 2, screen_height // 2 + 80))
-                screen.blit(choice_msg, choice_msg_rect)
-
-                new_high_score_msg = score_font.render("NEW HIGH SCORE!", True, red)
-                new_high_score_msg_rect = new_high_score_msg.get_rect(center=(screen_width // 2 - 10,
-                                                                              screen_height // 2 - 40))
-                screen.blit(new_high_score_msg, new_high_score_msg_rect)
-
-                score_msg = score_font.render('Score: ' + str(high_score), True, red)
-                score_msg_rect = score_msg.get_rect(center=(screen_width // 2 - 10, screen_height // 2 + 20))
-                screen.blit(score_msg, score_msg_rect)
+                message("Press R to restart, M to exit to main menu or Q to quit", 15, white, y_offset=80)
+                message("NEW HIGH SCORE!", 25, red, -10, -40)
+                message('Score: ' + str(high_score), 25, red, -10, 20)
             pygame.display.update()
 
             for event in pygame.event.get():
