@@ -331,9 +331,9 @@ def game(mode):
 
             # The snake speed increases with every eaten food
             if snake_speed < 60 and mode == "C":
-                snake_speed += 1
+                snake_speed += 0.75
             elif snake_speed < 600 and mode == "M":
-                snake_speed += 3
+                snake_speed += 2
 
         pygame.display.update()
 
