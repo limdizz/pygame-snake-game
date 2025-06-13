@@ -46,10 +46,13 @@ music_mh = 'audio/music_mh.ogg'
 
 
 def draw_hearts():
-    total_width = hearts_remaining * 40
+    heart_spacing = 5
+    total_width = hearts_remaining * (heart_image.get_width() + heart_spacing) - heart_spacing
     start_x = (screen_width - total_width) // 2
+    y_pos = screen_height - 50
+
     for i in range(hearts_remaining):
-        screen.blit(heart_image, (start_x + 30 * i, screen_height - 50))
+        screen.blit(heart_image, (start_x + i * (heart_image.get_width() + heart_spacing), y_pos))
 
 
 def load_high_score(mode):
