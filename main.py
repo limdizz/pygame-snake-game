@@ -3,60 +3,64 @@ import pygame
 
 pygame.init()
 
-# COLORS
-white = (255, 255, 255)
-black = (0, 0, 0)
-red = (255, 0, 0)
-green = (0, 87, 32)
-blue = (0, 0, 255)
-yellow = (255, 255, 0)
-aqua = (0, 255, 255)
-purple = (255, 0, 255)
+# --- Colors ---
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+RED = (255, 0, 0)
+GREEN = (0, 87, 32)
+BLUE = (0, 0, 255)
+YELLOW = (255, 255, 0)
+AQUA = (0, 255, 255)
+PURPLE = (255, 0, 255)
 
-# SCREEN SETTINGS
-screen_width = 800
-screen_height = 600
-screen = pygame.display.set_mode((screen_width, screen_height))
+# --- Screen Settings ---
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
 
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+# --- Game Settings ---
+SNAKE_BLOCK = 10
+INITIAL_SPEED = 5
+MAX_HEARTS = 3
+
+snake_speed = INITIAL_SPEED
+hearts_remaining = MAX_HEARTS
+
+# --- Graphics ---
+heart_image = pygame.transform.scale(pygame.image.load("images/heart.png"), (25, 25))
 snake_icon = pygame.image.load("images/snake.ico")
+
 pygame.display.set_caption("Snake")
 pygame.display.set_icon(snake_icon)
 
-heart_image = pygame.image.load("images/heart.png")
-heart_image = pygame.transform.scale(heart_image, (25, 25))
-hearts_remaining = 3
-
-# FONT SETTINGS
+# --- Fonts ---
 font_style = pygame.font.SysFont("TDAText", 15)
 score_font = pygame.font.SysFont("TDAText", 25)
 
-# SNAKE SETTINGS
-snake_block = 10
-snake_speed = 5
-
-# SOUNDS
+# --- Audio: sounds ---
 snake_start_sound = pygame.mixer.Sound('audio/snake_start.mp3')
 snake_end_sound = pygame.mixer.Sound('audio/snake_end.mp3')
 snake_hiss_ce_sound = pygame.mixer.Sound('audio/snake_hiss_ce.ogg')
 snake_hiss_mh_sound = pygame.mixer.Sound('audio/snake_hiss_mh.ogg')
 
-# MUSIC
+# --- Audio: music ---
 music_ce = 'audio/music_ce.ogg'
 music_mh = 'audio/music_mh.ogg'
 
 
 def draw_boundaries():
-    pygame.draw.rect(screen, green, [0, 0, screen_width, snake_block])  # Top
-    pygame.draw.rect(screen, green, [0, screen_height - snake_block, screen_width, snake_block])  # Bottom
-    pygame.draw.rect(screen, green, [0, 0, snake_block, screen_height])  # Left
-    pygame.draw.rect(screen, green, [screen_width - snake_block, 0, snake_block, screen_height])  # Right
+    pygame.draw.rect(screen, GREEN, [0, 0, SCREEN_WIDTH, SNAKE_BLOCK])  # Top
+    pygame.draw.rect(screen, GREEN, [0, SCREEN_HEIGHT - SNAKE_BLOCK, SCREEN_WIDTH, SNAKE_BLOCK])  # Bottom
+    pygame.draw.rect(screen, GREEN, [0, 0, SNAKE_BLOCK, SCREEN_HEIGHT])  # Left
+    pygame.draw.rect(screen, GREEN, [SCREEN_WIDTH - SNAKE_BLOCK, 0, SNAKE_BLOCK, SCREEN_HEIGHT])  # Right
 
 
 def draw_hearts():
     heart_spacing = 5
     total_width = hearts_remaining * (heart_image.get_width() + heart_spacing) - heart_spacing
-    start_x = (screen_width - total_width) // 2
-    y_pos = screen_height - 50
+    start_x = (SCREEN_WIDTH - total_width) // 2
+    y_pos = SCREEN_HEIGHT - 50
 
     for i in range(hearts_remaining):
         screen.blit(heart_image, (start_x + i * (heart_image.get_width() + heart_spacing), y_pos))
@@ -64,7 +68,7 @@ def draw_hearts():
 
 def draw_snake(block_size, segments):
     for segment in segments:
-        pygame.draw.rect(screen, white, [segment[0], segment[1], block_size, block_size])
+        pygame.draw.rect(screen, WHITE, [segment[0], segment[1], block_size, block_size])
 
 
 def load_high_score(mode):
@@ -91,13 +95,13 @@ def save_high_score(score, mode):
 
 
 def display_current_score(score):
-    value = score_font.render("Your score: " + str(score), True, white)
+    value = score_font.render("Your score: " + str(score), True, WHITE)
     screen.blit(value, [25, 10])
 
 
 def display_high_score(high_score):
-    value = score_font.render("High score: " + str(high_score), True, white)
-    screen.blit(value, [screen_width - 220, 10])
+    value = score_font.render("High score: " + str(high_score), True, WHITE)
+    screen.blit(value, [SCREEN_WIDTH - 220, 10])
 
 
 def show_message(text, font_size, color, x_offset=0, y_offset=0):
@@ -108,7 +112,7 @@ def show_message(text, font_size, color, x_offset=0, y_offset=0):
     else:
         raise ValueError(f"Unsupported font size: {font_size}")
 
-    message_rect = message.get_rect(center=(screen_width // 2 + x_offset, screen_height // 2 + y_offset))
+    message_rect = message.get_rect(center=(SCREEN_WIDTH // 2 + x_offset, SCREEN_HEIGHT // 2 + y_offset))
 
     screen.blit(message, message_rect)
 
@@ -120,7 +124,7 @@ def pause_game():
         pygame.mixer.music.pause()
 
         pause_button = pygame.image.load('images/pause.png')
-        pause_rect = pause_button.get_rect(center=(screen_width // 2, screen_height // 2))
+        pause_rect = pause_button.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
         screen.blit(pause_button, pause_rect)
         pygame.display.update()
 
@@ -149,8 +153,8 @@ def run_main_menu():
     intro = True
 
     while intro:
-        screen.fill(black)
-        show_message("Press C for classic easy mode or M for modern hard mode", 15, white)
+        screen.fill(BLACK)
+        show_message("Press C for classic easy mode or M for modern hard mode", 15, WHITE)
         pygame.display.update()
 
         for event in pygame.event.get():
@@ -187,15 +191,15 @@ def run_game_loop(mode):
 
     snake_list = []
     length_of_snake = 1
-    x1 = screen_width / 2
-    y1 = screen_height / 2
+    x1 = SCREEN_WIDTH / 2
+    y1 = SCREEN_HEIGHT / 2
     x1_change = 0
     y1_change = 0
     global snake_speed, hearts_remaining
 
-    food_x = round(random.randrange(40, screen_width - 40) / 10.0) * 10.0
-    food_y = round(random.randrange(40, screen_height - 40) / 10.0) * 10.0
-    color_list = [white, red, green, blue, aqua, purple, yellow]
+    food_x = round(random.randrange(40, SCREEN_WIDTH - 40) / 10.0) * 10.0
+    food_y = round(random.randrange(40, SCREEN_HEIGHT - 40) / 10.0) * 10.0
+    color_list = [WHITE, RED, GREEN, BLUE, AQUA, PURPLE, YELLOW]
 
     high_score = load_high_score(mode)
 
@@ -210,8 +214,8 @@ def run_game_loop(mode):
 
     while not game_over:
         while game_close:
-            screen.fill(black)
-            show_message("You lost! Press R to restart, M to exit to main menu or Q to quit", 15, red)
+            screen.fill(BLACK)
+            show_message("You lost! Press R to restart, M to exit to main menu or Q to quit", 15, RED)
 
             pygame.mixer.music.stop()
 
@@ -219,10 +223,10 @@ def run_game_loop(mode):
             display_high_score(high_score)
 
             if new_high_score:
-                screen.fill(black)
-                show_message("Press R to restart, M to exit to main menu or Q to quit", 15, white, y_offset=80)
-                show_message("NEW HIGH SCORE!", 25, red, -10, -40)
-                show_message('Score: ' + str(high_score), 25, red, -10, 20)
+                screen.fill(BLACK)
+                show_message("Press R to restart, M to exit to main menu or Q to quit", 15, WHITE, y_offset=80)
+                show_message("NEW HIGH SCORE!", 25, RED, -10, -40)
+                show_message('Score: ' + str(high_score), 25, RED, -10, 20)
 
             pygame.display.update()
 
@@ -254,24 +258,24 @@ def run_game_loop(mode):
             # The snake can be controlled both by the arrows and by using the WASD and numpad keys
             if event.type == pygame.KEYDOWN:
                 if ((event.key == pygame.K_LEFT or event.key == pygame.K_a or event.key == pygame.K_KP4)
-                        and x1_change != snake_block):
-                    x1_change = -snake_block
+                        and x1_change != SNAKE_BLOCK):
+                    x1_change = -SNAKE_BLOCK
                     y1_change = 0
 
                 if ((event.key == pygame.K_RIGHT or event.key == pygame.K_d or event.key == pygame.K_KP6)
-                        and x1_change != -snake_block):
-                    x1_change = snake_block
+                        and x1_change != -SNAKE_BLOCK):
+                    x1_change = SNAKE_BLOCK
                     y1_change = 0
 
                 if ((event.key == pygame.K_UP or event.key == pygame.K_w or event.key == pygame.K_KP8)
-                        and y1_change != snake_block):
+                        and y1_change != SNAKE_BLOCK):
                     x1_change = 0
-                    y1_change = -snake_block
+                    y1_change = -SNAKE_BLOCK
 
                 if ((event.key == pygame.K_DOWN or event.key == pygame.K_s or event.key == pygame.K_KP2)
-                        and y1_change != -snake_block):
+                        and y1_change != -SNAKE_BLOCK):
                     x1_change = 0
-                    y1_change = snake_block
+                    y1_change = SNAKE_BLOCK
 
                 if event.key == pygame.K_SPACE or event.key == pygame.K_ESCAPE:
                     pause_game()
@@ -283,25 +287,25 @@ def run_game_loop(mode):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pause_game()
 
-        if x1 >= screen_width:
+        if x1 >= SCREEN_WIDTH:
             x1 = 0
         elif x1 < 0:
-            x1 = screen_width - snake_block
+            x1 = SCREEN_WIDTH - SNAKE_BLOCK
 
-        if y1 >= screen_height:
+        if y1 >= SCREEN_HEIGHT:
             y1 = 0
         elif y1 < 0:
-            y1 = screen_height - snake_block
+            y1 = SCREEN_HEIGHT - SNAKE_BLOCK
 
         x1 += x1_change
         y1 += y1_change
 
         if mode == "C":
-            screen.fill(black)
+            screen.fill(BLACK)
             draw_hearts()
 
             # In this mode you cannot cross the border more than 3 times
-            if x1 >= screen_width or x1 < 0 or y1 >= screen_height or y1 < 0:
+            if x1 >= SCREEN_WIDTH or x1 < 0 or y1 >= SCREEN_HEIGHT or y1 < 0:
                 border_counter += 1
                 hearts_remaining -= 1
 
@@ -311,23 +315,23 @@ def run_game_loop(mode):
 
             pygame.draw.circle(
                 screen,
-                white,
-                (food_x + snake_block // 2, food_y + snake_block // 2),
-                snake_block // 2)
+                WHITE,
+                (food_x + SNAKE_BLOCK // 2, food_y + SNAKE_BLOCK // 2),
+                SNAKE_BLOCK // 2)
         else:
             bg = pygame.image.load("images/grass.jpg")
             screen.blit(bg, (0, 0))
             draw_boundaries()
 
-            if x1 >= screen_width or x1 < 0 or y1 >= screen_height or y1 < 0:
+            if x1 >= SCREEN_WIDTH or x1 < 0 or y1 >= SCREEN_HEIGHT or y1 < 0:
                 game_close = True
                 snake_end_sound.play()
 
             pygame.draw.circle(
                 screen,
                 random.choice(color_list),
-                (food_x + snake_block // 2, food_y + snake_block // 2),
-                snake_block // 1.5
+                (food_x + SNAKE_BLOCK // 2, food_y + SNAKE_BLOCK // 2),
+                SNAKE_BLOCK // 1.5
             )
 
         snake_head = [x1, y1]
@@ -341,13 +345,13 @@ def run_game_loop(mode):
                 game_close = True
                 snake_end_sound.play()
 
-        draw_snake(snake_block, snake_list)
+        draw_snake(SNAKE_BLOCK, snake_list)
         display_current_score(length_of_snake - 1)
         display_high_score(high_score)
 
         if x1 == food_x and y1 == food_y:
-            food_x = round(random.randrange(60, screen_width - 60) / 10.0) * 10.0
-            food_y = round(random.randrange(60, screen_height - 60) / 10.0) * 10.0
+            food_x = round(random.randrange(60, SCREEN_WIDTH - 60) / 10.0) * 10.0
+            food_y = round(random.randrange(60, SCREEN_HEIGHT - 60) / 10.0) * 10.0
 
             length_of_snake += growth_step
 
