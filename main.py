@@ -1,3 +1,4 @@
+import math
 import random
 import pygame
 
@@ -201,6 +202,14 @@ def run_game_loop(mode):
     food_y = round(random.randrange(40, SCREEN_HEIGHT - 40) / 10.0) * 10.0
     color_list = [WHITE, RED, GREEN, BLUE, AQUA, PURPLE, YELLOW]
 
+    bonus_ball_counter = 0
+    bonus_active = False
+    bonus_x = None
+    bonus_y = None
+    bonus_threshold = 5
+    bonus_radius = int(SNAKE_BLOCK * 1.25)
+
+    current_score = 0
     high_score = load_high_score(mode)
 
     if mode == "C":
@@ -219,7 +228,7 @@ def run_game_loop(mode):
 
             pygame.mixer.music.stop()
 
-            display_current_score(length_of_snake - 1)
+            display_current_score(current_score)
             display_high_score(high_score)
 
             if new_high_score:
@@ -318,6 +327,14 @@ def run_game_loop(mode):
                 WHITE,
                 (food_x + SNAKE_BLOCK // 2, food_y + SNAKE_BLOCK // 2),
                 SNAKE_BLOCK // 2)
+
+            if bonus_active:
+                pygame.draw.circle(
+                    screen,
+                    random.choice(color_list),
+                    (int(bonus_x + SNAKE_BLOCK // 2), int(bonus_y + SNAKE_BLOCK // 2)),
+                    bonus_radius
+                )
         else:
             bg = pygame.image.load("images/grass.jpg")
             screen.blit(bg, (0, 0))
@@ -334,6 +351,16 @@ def run_game_loop(mode):
                 SNAKE_BLOCK // 1.5
             )
 
+            if bonus_active:
+                size = bonus_radius * 2
+                points = [
+                    (bonus_x, bonus_y + size // 2),
+                    (bonus_x + size // 2, bonus_y),
+                    (bonus_x + size, bonus_y + size // 2),
+                    (bonus_x + size // 2, bonus_y + size)
+                ]
+                pygame.draw.polygon(screen, random.choice(color_list), points)
+
         snake_head = [x1, y1]
         snake_list.append(snake_head)
 
@@ -346,7 +373,7 @@ def run_game_loop(mode):
                 snake_end_sound.play()
 
         draw_snake(SNAKE_BLOCK, snake_list)
-        display_current_score(length_of_snake - 1)
+        display_current_score(current_score)
         display_high_score(high_score)
 
         if x1 == food_x and y1 == food_y:
@@ -354,6 +381,14 @@ def run_game_loop(mode):
             food_y = round(random.randrange(60, SCREEN_HEIGHT - 60) / 10.0) * 10.0
 
             length_of_snake += growth_step
+            current_score += growth_step
+            bonus_ball_counter += 1
+
+            if bonus_ball_counter >= bonus_threshold and not bonus_active:
+                bonus_x = round(random.randrange(60, SCREEN_WIDTH - 60) / 10.0) * 10.0
+                bonus_y = round(random.randrange(60, SCREEN_HEIGHT - 60) / 10.0) * 10.0
+                bonus_active = True
+                bonus_ball_counter = 0
 
             if mode == "M":
                 # In this mode the score counter increases in an arithmetic progression
@@ -369,7 +404,29 @@ def run_game_loop(mode):
             elif snake_speed < 600 and mode == "M":
                 snake_speed += 2
 
-        current_score = length_of_snake - 1
+        if bonus_active:
+            bonus_center_x = bonus_x + bonus_radius
+            bonus_center_y = bonus_y + bonus_radius
+
+            snake_center_x = x1 + SNAKE_BLOCK // 2
+            snake_center_y = y1 + SNAKE_BLOCK // 2
+
+            distance = math.hypot(snake_center_x - bonus_center_x, snake_center_y - bonus_center_y)
+
+            if distance < bonus_radius + SNAKE_BLOCK // 2:
+                bonus_active = False
+
+                if mode == "C":
+                    bonus_reduction_ce = 3
+                    length_of_snake = max(1, length_of_snake - bonus_reduction_ce)
+                    del snake_list[:min(bonus_reduction_ce, len(snake_list))]
+
+                elif mode == "M":
+                    new_length = max(1, length_of_snake // 2)
+                    bonus_reduction_mh = length_of_snake - new_length
+                    length_of_snake = new_length
+                    del snake_list[:min(bonus_reduction_mh, len(snake_list))]
+
         if current_score > high_score:
             high_score = current_score
             save_high_score(high_score, mode)
