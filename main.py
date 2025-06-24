@@ -74,9 +74,9 @@ def draw_snake(block_size, segments):
 
 def load_high_score(mode):
     if mode == "M":
-        record_file = "highscore_mh.txt"
+        record_file = "saves/highscore_mh.txt"
     else:
-        record_file = "highscore_ce.txt"
+        record_file = "saves/highscore_ce.txt"
 
     try:
         with open(record_file) as file:
@@ -87,9 +87,9 @@ def load_high_score(mode):
 
 def save_high_score(score, mode):
     if mode == "M":
-        record_file = "highscore_mh.txt"
+        record_file = "saves/highscore_mh.txt"
     else:
-        record_file = "highscore_ce.txt"
+        record_file = "saves/highscore_ce.txt"
 
     with open(record_file, "w") as file:
         file.write(str(score))
