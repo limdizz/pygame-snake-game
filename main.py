@@ -28,6 +28,13 @@ MAX_HEARTS = 3
 snake_speed = INITIAL_SPEED
 hearts_remaining = MAX_HEARTS
 
+# --- Button Settings ---
+BUTTON_WIDTH = 300
+BUTTON_HEIGHT = 50
+BUTTON_COLOR = (70, 130, 180)
+BUTTON_HOVER_COLOR = (100, 150, 200)
+BUTTON_TEXT_COLOR = WHITE
+
 # --- Graphics ---
 heart_image = pygame.transform.scale(pygame.image.load("images/heart.png"), (25, 25))
 snake_icon = pygame.image.load("images/snake.ico")
@@ -38,6 +45,7 @@ pygame.display.set_icon(snake_icon)
 # --- Fonts ---
 font_style = pygame.font.SysFont("TDAText", 15)
 score_font = pygame.font.SysFont("TDAText", 25)
+menu_font = pygame.font.SysFont("TDAText", 30)
 
 # --- Audio: sounds ---
 snake_start_sound = pygame.mixer.Sound('audio/snake_start.mp3')
@@ -48,6 +56,32 @@ snake_hiss_mh_sound = pygame.mixer.Sound('audio/snake_hiss_mh.ogg')
 # --- Audio: music ---
 music_ce = 'audio/music_ce.ogg'
 music_mh = 'audio/music_mh.ogg'
+
+
+class Button:
+    def __init__(self, x, y, width, height, text, action=None):
+        self.rect = pygame.Rect(x, y, width, height)
+        self.text = text
+        self.action = action
+        self.is_hovered = False
+
+    def draw(self, surface):
+        color = BUTTON_HOVER_COLOR if self.is_hovered else BUTTON_COLOR
+        pygame.draw.rect(surface, color, self.rect, border_radius=10)
+        pygame.draw.rect(surface, WHITE, self.rect, 2, border_radius=10)
+
+        text_surf = menu_font.render(self.text, True, BUTTON_TEXT_COLOR)
+        text_rect = text_surf.get_rect(center=self.rect.center)
+        surface.blit(text_surf, text_rect)
+
+    def check_hover(self, pos):
+        self.is_hovered = self.rect.collidepoint(pos)
+        return self.is_hovered
+
+    def handle_event(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.is_hovered:
+            if self.action:
+                self.action()
 
 
 def draw_boundaries():
