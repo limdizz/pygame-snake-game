@@ -185,36 +185,57 @@ def pause_game():
 
 
 def run_main_menu():
-    intro = True
+    buttons = [
+        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
+               "Начать игру", lambda: select_mode_menu()),
+        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
+               "Настройки", lambda: run_settings_menu()),
+        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
+               "Выйти из игры", lambda: exit_game())
+    ]
 
-    while intro:
+    while True:
+        mouse_pos = pygame.mouse.get_pos()
         screen.fill(BLACK)
-        show_message("Press C for classic easy mode or M for modern hard mode", 15, WHITE)
-        pygame.display.update()
+
+        title = menu_font.render("Змейка", True, WHITE)
+        screen.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2, 100))
+
+        author = font_style.render("Автор: Владислав Клименко (Limdizz). 2024-2025", True, WHITE)
+        screen.blit(author, (SCREEN_WIDTH // 2 - author.get_width() // 2, SCREEN_HEIGHT - 50))
+
+        for button in buttons:
+            button.check_hover(mouse_pos)
+            button.draw(screen)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
 
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                for button in buttons:
+                    button.handle_event(event)
+
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_c:
-                    snake_start_sound.play()
-                    pygame.mixer.music.load(music_ce)
-                    pygame.mixer.music.set_volume(0.5)
-                    pygame.mixer.music.play(-1)
-                    run_game_loop("C")
-
-                elif event.key == pygame.K_m:
-                    snake_start_sound.play()
-                    pygame.mixer.music.load(music_mh)
-                    pygame.mixer.music.set_volume(0.5)
-                    pygame.mixer.music.play(-1)
-                    run_game_loop("M")
-
-                elif event.key == pygame.K_q:
+                if event.key == pygame.K_q:
                     pygame.quit()
                     quit()
+
+        pygame.display.update()
+        clock.tick(15)
+
+
+def select_mode_menu():
+    pass
+
+
+def run_settings_menu():
+    pass
+
+
+def exit_game():
+    pass
 
 
 def run_game_loop(mode):
