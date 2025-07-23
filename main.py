@@ -227,6 +227,10 @@ def run_main_menu():
         clock.tick(15)
 
 
+def run_main_menu_en():
+    pass
+
+
 def select_mode_menu():
     buttons = [
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
@@ -305,6 +309,45 @@ def run_settings_menu():
         clock.tick(15)
 
 
+def run_settings_menu_en():
+    buttons = [
+        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
+               "Resolution", run_resolution_menu_en),
+        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
+               "Language", run_language_menu_en),
+        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
+               "Back", run_main_menu_en)
+    ]
+
+    while True:
+        mouse_pos = pygame.mouse.get_pos()
+        screen.fill(BLACK)
+
+        title = menu_font.render("Settings", True, WHITE)
+        screen.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2, 100))
+
+        for button in buttons:
+            button.check_hover(mouse_pos)
+            button.draw(screen)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                for button in buttons:
+                    button.handle_event(event)
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    run_main_menu_en()
+                    return
+
+        pygame.display.update()
+        clock.tick(15)
+
+
 def change_resolution(width, height):
     global screen_height, screen_width, screen
     screen_width = width
@@ -357,6 +400,10 @@ def run_resolution_menu():
         clock.tick(15)
 
 
+def run_resolution_menu_en():
+    pass
+
+
 def run_language_menu():
     buttons = [
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
@@ -396,7 +443,41 @@ def run_language_menu():
 
 
 def run_language_menu_en():
-    pass
+    buttons = [
+        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
+               "Русский", run_language_menu),
+        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
+               "English", run_language_menu_en),
+        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
+               "Back", run_settings_menu_en)
+    ]
+    while True:
+        mouse_pos = pygame.mouse.get_pos()
+        screen.fill(BLACK)
+
+        title = menu_font.render("Language", True, WHITE)
+        screen.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2, 100))
+
+        for button in buttons:
+            button.check_hover(mouse_pos)
+            button.draw(screen)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                for button in buttons:
+                    button.handle_event(event)
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    run_settings_menu_en()
+                    return
+
+        pygame.display.update()
+        clock.tick(15)
 
 
 def exit_game():
