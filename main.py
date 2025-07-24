@@ -310,7 +310,42 @@ def select_mode_menu():
 
 
 def select_mode_menu_en():
-    pass
+    buttons = [
+        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
+               "Classic Easy", lambda: run_game_loop("C")),
+        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
+               "Modern Hard", lambda: run_game_loop("M")),
+        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
+               "Back", run_main_menu_en)
+    ]
+
+    while True:
+        mouse_pos = pygame.mouse.get_pos()
+        screen.fill(BLACK)
+
+        title = menu_font.render("Select the game mode", True, WHITE)
+        screen.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2, 100))
+
+        for button in buttons:
+            button.check_hover(mouse_pos)
+            button.draw(screen)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                for button in buttons:
+                    button.handle_event(event)
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    run_main_menu_en()
+                    return
+
+        pygame.display.update()
+        clock.tick(15)
 
 
 def run_settings_menu():
