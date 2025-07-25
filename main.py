@@ -185,25 +185,17 @@ def pause_game():
         clock.tick(15)
 
 
-def run_main_menu():
-    buttons = [
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Начать игру", lambda: select_mode_menu()),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Настройки", lambda: run_settings_menu()),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Выйти из игры", lambda: exit_game())
-    ]
-
+def create_menu(title_text, buttons, back_function=None):
     while True:
         mouse_pos = pygame.mouse.get_pos()
         screen.fill(BLACK)
 
-        title = menu_font.render("Змейка", True, WHITE)
+        title = menu_font.render(title_text, True, WHITE)
         screen.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2, 100))
 
-        author = font_style.render("Автор: Владислав Клименко (Limdizz). 2024-2025", True, WHITE)
-        screen.blit(author, (SCREEN_WIDTH // 2 - author.get_width() // 2, SCREEN_HEIGHT - 50))
+        if back_function is None:
+            author = font_style.render("Автор: Владислав Клименко (Limdizz). 2024-2025", True, WHITE)
+            screen.blit(author, (SCREEN_WIDTH // 2 - author.get_width() // 2, SCREEN_HEIGHT - 50))
 
         for button in buttons:
             button.check_hover(mouse_pos)
@@ -219,12 +211,29 @@ def run_main_menu():
                     button.handle_event(event)
 
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE and back_function:
+                    back_function()
+                    return
+
                 if event.key == pygame.K_q:
                     pygame.quit()
                     quit()
 
         pygame.display.update()
         clock.tick(15)
+
+
+def run_main_menu():
+    buttons = [
+        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
+               "Начать игру", lambda: select_mode_menu()),
+        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
+               "Настройки", lambda: run_settings_menu()),
+        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
+               "Выйти из игры", lambda: exit_game())
+    ]
+
+    create_menu("Змейка", buttons)
 
 
 def run_main_menu_en():
@@ -237,37 +246,7 @@ def run_main_menu_en():
                "Exit to Desktop", lambda: exit_game())
     ]
 
-    while True:
-        mouse_pos = pygame.mouse.get_pos()
-
-        screen.fill(BLACK)
-
-        title = menu_font.render("Snake: The Game", True, WHITE)
-        screen.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2, 100))
-
-        made_by = font_style.render("Author: Vladislav Klimenko (Limdizz). 2024-2025", True, WHITE)
-        screen.blit(made_by, (SCREEN_WIDTH // 2 - made_by.get_width() // 2, SCREEN_HEIGHT - 50))
-
-        for button in buttons:
-            button.check_hover(mouse_pos)
-            button.draw(screen)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                for button in buttons:
-                    button.handle_event(event)
-
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_q:
-                    pygame.quit()
-                    quit()
-
-        pygame.display.update()
-        clock.tick(15)
+    create_menu("Snake: The Game", buttons)
 
 
 def select_mode_menu():
@@ -280,33 +259,7 @@ def select_mode_menu():
                "Назад", run_main_menu)
     ]
 
-    while True:
-        mouse_pos = pygame.mouse.get_pos()
-        screen.fill(BLACK)
-
-        title = menu_font.render("Выберите режим игры", True, WHITE)
-        screen.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2, 100))
-
-        for button in buttons:
-            button.check_hover(mouse_pos)
-            button.draw(screen)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                for button in buttons:
-                    button.handle_event(event)
-
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    run_main_menu()
-                    return
-
-        pygame.display.update()
-        clock.tick(15)
+    create_menu("Выберите режим игры", buttons, run_main_menu)
 
 
 def select_mode_menu_en():
@@ -319,33 +272,7 @@ def select_mode_menu_en():
                "Back", run_main_menu_en)
     ]
 
-    while True:
-        mouse_pos = pygame.mouse.get_pos()
-        screen.fill(BLACK)
-
-        title = menu_font.render("Select the game mode", True, WHITE)
-        screen.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2, 100))
-
-        for button in buttons:
-            button.check_hover(mouse_pos)
-            button.draw(screen)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                for button in buttons:
-                    button.handle_event(event)
-
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    run_main_menu_en()
-                    return
-
-        pygame.display.update()
-        clock.tick(15)
+    create_menu("Select the game mode", buttons, run_main_menu_en)
 
 
 def run_settings_menu():
@@ -358,33 +285,7 @@ def run_settings_menu():
                "Назад", run_main_menu)
     ]
 
-    while True:
-        mouse_pos = pygame.mouse.get_pos()
-        screen.fill(BLACK)
-
-        title = menu_font.render("Настройки", True, WHITE)
-        screen.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2, 100))
-
-        for button in buttons:
-            button.check_hover(mouse_pos)
-            button.draw(screen)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                for button in buttons:
-                    button.handle_event(event)
-
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    run_main_menu()
-                    return
-
-        pygame.display.update()
-        clock.tick(15)
+    create_menu("Настройки", buttons, run_main_menu)
 
 
 def run_settings_menu_en():
@@ -397,33 +298,7 @@ def run_settings_menu_en():
                "Back", run_main_menu_en)
     ]
 
-    while True:
-        mouse_pos = pygame.mouse.get_pos()
-        screen.fill(BLACK)
-
-        title = menu_font.render("Settings", True, WHITE)
-        screen.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2, 100))
-
-        for button in buttons:
-            button.check_hover(mouse_pos)
-            button.draw(screen)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                for button in buttons:
-                    button.handle_event(event)
-
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    run_main_menu_en()
-                    return
-
-        pygame.display.update()
-        clock.tick(15)
+    create_menu("Settings", buttons, run_main_menu_en)
 
 
 def change_resolution(width, height):
@@ -460,33 +335,7 @@ def run_resolution_menu():
                "Назад", run_settings_menu)
     ]
 
-    while True:
-        mouse_pos = pygame.mouse.get_pos()
-        screen.fill(BLACK)
-
-        title = menu_font.render("Разрешение", True, WHITE)
-        screen.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2, 100))
-
-        for button in buttons:
-            button.check_hover(mouse_pos)
-            button.draw(screen)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                for button in buttons:
-                    button.handle_event(event)
-
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    run_settings_menu()
-                    return
-
-        pygame.display.update()
-        clock.tick(15)
+    create_menu("Разрешение", buttons, run_settings_menu)
 
 
 def run_resolution_menu_en():
@@ -501,33 +350,7 @@ def run_resolution_menu_en():
                "Back", run_settings_menu_en)
     ]
 
-    while True:
-        mouse_pos = pygame.mouse.get_pos()
-        screen.fill(BLACK)
-
-        title = menu_font.render("Resolution", True, WHITE)
-        screen.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2, 100))
-
-        for button in buttons:
-            button.check_hover(mouse_pos)
-            button.draw(screen)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                for button in buttons:
-                    button.handle_event(event)
-
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    run_settings_menu_en()
-                    return
-
-        pygame.display.update()
-        clock.tick(15)
+    create_menu("Resolution", buttons, run_settings_menu_en)
 
 
 def run_language_menu():
@@ -539,33 +362,8 @@ def run_language_menu():
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
                "Назад", run_settings_menu)
     ]
-    while True:
-        mouse_pos = pygame.mouse.get_pos()
-        screen.fill(BLACK)
 
-        title = menu_font.render("Язык", True, WHITE)
-        screen.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2, 100))
-
-        for button in buttons:
-            button.check_hover(mouse_pos)
-            button.draw(screen)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                for button in buttons:
-                    button.handle_event(event)
-
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    run_settings_menu()
-                    return
-
-        pygame.display.update()
-        clock.tick(15)
+    create_menu("Язык", buttons, run_settings_menu)
 
 
 def run_language_menu_en():
@@ -577,33 +375,8 @@ def run_language_menu_en():
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
                "Back", run_settings_menu_en)
     ]
-    while True:
-        mouse_pos = pygame.mouse.get_pos()
-        screen.fill(BLACK)
 
-        title = menu_font.render("Language", True, WHITE)
-        screen.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2, 100))
-
-        for button in buttons:
-            button.check_hover(mouse_pos)
-            button.draw(screen)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                for button in buttons:
-                    button.handle_event(event)
-
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    run_settings_menu_en()
-                    return
-
-        pygame.display.update()
-        clock.tick(15)
+    create_menu("Language", buttons, run_settings_menu_en)
 
 
 def exit_game():
