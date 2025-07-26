@@ -194,7 +194,7 @@ def create_menu(title_text, buttons, back_function=None):
         screen.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2, 100))
 
         if back_function is None:
-            author = font_style.render("Автор: Владислав Клименко (Limdizz). 2024-2025", True, WHITE)
+            author = font_style.render("2024-2025. Владислав Клименко (Limdizz).", True, WHITE)
             screen.blit(author, (SCREEN_WIDTH // 2 - author.get_width() // 2, SCREEN_HEIGHT - 50))
 
         for button in buttons:
@@ -301,7 +301,7 @@ def run_settings_menu_en():
     create_menu("Settings", buttons, run_main_menu_en)
 
 
-def change_resolution(width, height):
+def change_resolution(width, height, menu_callback):
     global SCREEN_HEIGHT, SCREEN_WIDTH, screen
     SCREEN_WIDTH = width
     SCREEN_HEIGHT = height
@@ -309,28 +309,17 @@ def change_resolution(width, height):
 
     pygame.display.update()
     clock.tick(15)
-    run_resolution_menu()
-
-
-def change_resolution_en(width, height):
-    global SCREEN_HEIGHT, SCREEN_WIDTH, screen
-    SCREEN_WIDTH = width
-    SCREEN_HEIGHT = height
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-
-    pygame.display.update()
-    clock.tick(15)
-    run_resolution_menu_en()
+    menu_callback()
 
 
 def run_resolution_menu():
     buttons = [
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "640x480", lambda: change_resolution(640, 480)),
+               "640x480", lambda: change_resolution(640, 480, run_resolution_menu)),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "800x600", lambda: change_resolution(800, 600)),
+               "800x600", lambda: change_resolution(800, 600, run_resolution_menu)),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "1280x720", lambda: change_resolution(1280, 720)),
+               "1280x720", lambda: change_resolution(1280, 720, run_resolution_menu)),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 410, BUTTON_WIDTH, BUTTON_HEIGHT,
                "Назад", run_settings_menu)
     ]
@@ -341,11 +330,11 @@ def run_resolution_menu():
 def run_resolution_menu_en():
     buttons = [
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "640x480", lambda: change_resolution_en(640, 480)),
+               "640x480", lambda: change_resolution(640, 480, run_resolution_menu_en)),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "800x600", lambda: change_resolution_en(800, 600)),
+               "800x600", lambda: change_resolution(800, 600, run_resolution_menu_en)),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "1280x720", lambda: change_resolution_en(1280, 720)),
+               "1280x720", lambda: change_resolution(1280, 720, run_resolution_menu_en)),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 410, BUTTON_WIDTH, BUTTON_HEIGHT,
                "Back", run_settings_menu_en)
     ]
