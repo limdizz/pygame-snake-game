@@ -368,6 +368,66 @@ def run_language_menu_en():
     create_menu("Language", buttons, run_settings_menu_en)
 
 
+def lose_game_menu(mode):
+    buttons = [
+        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT, "Начать заново",
+               lambda: restart_game(mode)),
+        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT, "Выйти в меню",
+               lambda: run_main_menu()),
+        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
+               "Выйти из игры", lambda: exit_game())
+    ]
+
+    create_menu("Вы проиграли", buttons)
+
+
+def lose_game_menu_en(mode):
+    buttons = [
+        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT, "Restart",
+               lambda: restart_game(mode)),
+        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT, "Exit to Menu",
+               lambda: run_main_menu_en()),
+        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
+               "Exit to Desktop", lambda: exit_game())
+    ]
+
+    create_menu("You lost", buttons)
+
+
+def new_high_score_menu(mode, score=0):
+    buttons = [
+        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT, "Начать заново",
+               lambda: restart_game(mode)),
+        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT, "Выйти в меню",
+               lambda: run_main_menu()),
+        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
+               "Выйти из игры", lambda: exit_game())
+    ]
+
+    create_menu(f"Новый рекорд: {score}", buttons)
+
+
+def new_high_score_menu_en(mode, score=0):
+    buttons = [
+        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT, "Restart",
+               lambda: restart_game(mode)),
+        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT, "Exit to Menu",
+               lambda: run_main_menu_en()),
+        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
+               "Exit to Desktop", lambda: exit_game())
+    ]
+
+    create_menu(f"New High Score: {score}", buttons)
+
+
+def restart_game(mode):
+    global snake_speed, hearts_remaining
+
+    snake_speed = INITIAL_SPEED
+    hearts_remaining = MAX_HEARTS
+    run_game_loop(mode)
+
+
 def exit_game():
     pygame.quit()
     quit()
@@ -414,18 +474,25 @@ def run_game_loop(mode):
     while not game_over:
         while game_close:
             screen.fill(BLACK)
-            show_message("You lost! Press R to restart, M to exit to main menu or Q to quit", 15, RED)
 
             pygame.mixer.music.stop()
 
-            display_current_score(current_score)
-            display_high_score(high_score)
-
             if new_high_score:
                 screen.fill(BLACK)
-                show_message("Press R to restart, M to exit to main menu or Q to quit", 15, WHITE, y_offset=80)
-                show_message("NEW HIGH SCORE!", 25, RED, -10, -40)
-                show_message('Score: ' + str(high_score), 25, RED, -10, 20)
+
+                if mode == "C":
+                    new_high_score_menu_en("C", high_score)
+                elif mode == "M":
+                    new_high_score_menu_en("M", high_score)
+
+            else:
+                if mode == "C":
+                    lose_game_menu_en("C")
+                elif mode == "M":
+                    lose_game_menu_en("M")
+
+            display_current_score(current_score)
+            display_high_score(high_score)
 
             pygame.display.update()
 
