@@ -131,11 +131,21 @@ def save_high_score(score, mode):
 
 
 def display_current_score(score):
+    value = score_font.render("Счёт: " + str(score), True, WHITE)
+    screen.blit(value, [25, 10])
+
+
+def display_current_score_en(score):
     value = score_font.render("Your score: " + str(score), True, WHITE)
     screen.blit(value, [25, 10])
 
 
 def display_high_score(high_score):
+    value = score_font.render("Рекорд: " + str(high_score), True, WHITE)
+    screen.blit(value, [SCREEN_WIDTH - 220, 10])
+
+
+def display_high_score_en(high_score):
     value = score_font.render("High score: " + str(high_score), True, WHITE)
     screen.blit(value, [SCREEN_WIDTH - 220, 10])
 
@@ -252,9 +262,9 @@ def run_main_menu_en():
 def select_mode_menu():
     buttons = [
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Классический", lambda: run_game_loop("C")),
+               "Классический", lambda: run_game_loop("C", "ru")),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Современный", lambda: run_game_loop("M")),
+               "Современный", lambda: run_game_loop("M", "ru")),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
                "Назад", run_main_menu)
     ]
@@ -265,9 +275,9 @@ def select_mode_menu():
 def select_mode_menu_en():
     buttons = [
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Classic Easy", lambda: run_game_loop("C")),
+               "Classic Easy", lambda: run_game_loop("C", "en")),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Modern Hard", lambda: run_game_loop("M")),
+               "Modern Hard", lambda: run_game_loop("M", "en")),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
                "Back", run_main_menu_en)
     ]
@@ -371,7 +381,7 @@ def run_language_menu_en():
 def lose_game_menu(mode):
     buttons = [
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT, "Начать заново",
-               lambda: restart_game(mode)),
+               lambda: restart_game(mode, "ru")),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT, "Выйти в меню",
                lambda: run_main_menu()),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
@@ -384,7 +394,7 @@ def lose_game_menu(mode):
 def lose_game_menu_en(mode):
     buttons = [
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT, "Restart",
-               lambda: restart_game(mode)),
+               lambda: restart_game(mode, "en")),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT, "Exit to Menu",
                lambda: run_main_menu_en()),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
@@ -397,7 +407,7 @@ def lose_game_menu_en(mode):
 def new_high_score_menu(mode, score=0):
     buttons = [
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT, "Начать заново",
-               lambda: restart_game(mode)),
+               lambda: restart_game(mode, "ru")),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT, "Выйти в меню",
                lambda: run_main_menu()),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
@@ -410,7 +420,7 @@ def new_high_score_menu(mode, score=0):
 def new_high_score_menu_en(mode, score=0):
     buttons = [
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT, "Restart",
-               lambda: restart_game(mode)),
+               lambda: restart_game(mode, "en")),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT, "Exit to Menu",
                lambda: run_main_menu_en()),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
@@ -420,12 +430,16 @@ def new_high_score_menu_en(mode, score=0):
     create_menu(f"New High Score: {score}", buttons)
 
 
-def restart_game(mode):
+def restart_game(mode, lang="ru"):
     global snake_speed, hearts_remaining
 
     snake_speed = INITIAL_SPEED
     hearts_remaining = MAX_HEARTS
-    run_game_loop(mode)
+
+    if lang == "ru":
+        run_game_loop(mode, "ru")
+    elif lang == "en":
+        run_game_loop(mode, "en")
 
 
 def exit_game():
@@ -433,7 +447,7 @@ def exit_game():
     quit()
 
 
-def run_game_loop(mode):
+def run_game_loop(mode, lang="ru"):
     game_over = False
     game_close = False
     new_high_score = False
@@ -480,16 +494,26 @@ def run_game_loop(mode):
             if new_high_score:
                 screen.fill(BLACK)
 
-                if mode == "C":
+                if mode == "C" and lang == "en":
                     new_high_score_menu_en("C", high_score)
-                elif mode == "M":
+                elif mode == "C" and lang == "ru":
+                    new_high_score_menu("C", high_score)
+
+                if mode == "M" and lang == "en":
                     new_high_score_menu_en("M", high_score)
+                elif mode == "M" and lang == "ru":
+                    new_high_score_menu("M", high_score)
 
             else:
-                if mode == "C":
+                if mode == "C" and lang == "en":
                     lose_game_menu_en("C")
-                elif mode == "M":
+                elif mode == "C" and lang == "ru":
+                    lose_game_menu("C")
+
+                if mode == "M" and lang == "en":
                     lose_game_menu_en("M")
+                elif mode == "M" and lang == "ru":
+                    lose_game_menu("M")
 
             display_current_score(current_score)
             display_high_score(high_score)
@@ -505,17 +529,6 @@ def run_game_loop(mode):
                     if event.key == pygame.K_q:
                         game_over = True
                         game_close = False
-
-                    # After a restart, the speed counter is reset
-                    if event.key == pygame.K_r:
-                        snake_speed = 5
-                        hearts_remaining = 3
-                        run_game_loop(mode)
-
-                    if event.key == pygame.K_m:
-                        snake_speed = 5
-                        hearts_remaining = 3
-                        run_main_menu()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -630,8 +643,13 @@ def run_game_loop(mode):
                 snake_end_sound.play()
 
         draw_snake(SNAKE_BLOCK, snake_list)
-        display_current_score(current_score)
-        display_high_score(high_score)
+
+        if lang == "ru":
+            display_current_score(current_score)
+            display_high_score(high_score)
+        elif lang == "en":
+            display_current_score_en(current_score)
+            display_high_score_en(high_score)
 
         if x1 == food_x and y1 == food_y:
             food_x = round(random.randrange(60, SCREEN_WIDTH - 60) / 10.0) * 10.0
