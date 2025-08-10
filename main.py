@@ -130,24 +130,22 @@ def save_high_score(score, mode):
         file.write(str(score))
 
 
-def display_current_score(score):
-    value = score_font.render("Счёт: " + str(score), True, WHITE)
-    screen.blit(value, [25, 10])
+def display_current_score(score, lang):
+    if lang == "ru":
+        value = score_font.render("Счёт: " + str(score), True, WHITE)
+        screen.blit(value, [25, 10])
+    elif lang == "en":
+        value = score_font.render("Your score: " + str(score), True, WHITE)
+        screen.blit(value, [25, 10])
 
 
-def display_current_score_en(score):
-    value = score_font.render("Your score: " + str(score), True, WHITE)
-    screen.blit(value, [25, 10])
-
-
-def display_high_score(high_score):
-    value = score_font.render("Рекорд: " + str(high_score), True, WHITE)
-    screen.blit(value, [SCREEN_WIDTH - 220, 10])
-
-
-def display_high_score_en(high_score):
-    value = score_font.render("High score: " + str(high_score), True, WHITE)
-    screen.blit(value, [SCREEN_WIDTH - 220, 10])
+def display_high_score(high_score, lang):
+    if lang == "ru":
+        value = score_font.render("Рекорд: " + str(high_score), True, WHITE)
+        screen.blit(value, [SCREEN_WIDTH - 220, 10])
+    elif lang == "en":
+        value = score_font.render("High score: " + str(high_score), True, WHITE)
+        screen.blit(value, [SCREEN_WIDTH - 220, 10])
 
 
 def show_message(text, font_size, color, x_offset=0, y_offset=0):
@@ -515,8 +513,8 @@ def run_game_loop(mode, lang="ru"):
                 elif mode == "M" and lang == "ru":
                     lose_game_menu("M")
 
-            display_current_score(current_score)
-            display_high_score(high_score)
+            display_current_score(current_score, "ru")
+            display_high_score(high_score, "ru")
 
             pygame.display.update()
 
@@ -645,11 +643,11 @@ def run_game_loop(mode, lang="ru"):
         draw_snake(SNAKE_BLOCK, snake_list)
 
         if lang == "ru":
-            display_current_score(current_score)
-            display_high_score(high_score)
+            display_current_score(current_score, "ru")
+            display_high_score(high_score, "ru")
         elif lang == "en":
-            display_current_score_en(current_score)
-            display_high_score_en(high_score)
+            display_current_score(current_score, "en")
+            display_high_score(high_score, "en")
 
         if x1 == food_x and y1 == food_y:
             food_x = round(random.randrange(60, SCREEN_WIDTH - 60) / 10.0) * 10.0
