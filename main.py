@@ -231,56 +231,56 @@ def create_menu(title_text, buttons, back_function=None):
         clock.tick(15)
 
 
-def run_main_menu():
-    buttons = [
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Начать игру", lambda: select_mode_menu()),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Настройки", lambda: run_settings_menu()),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Выйти из игры", lambda: exit_game())
-    ]
+def run_main_menu(lang):
+    if lang == "ru":
+        buttons = [
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "Начать игру", lambda: select_mode_menu("ru")),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "Настройки", lambda: run_settings_menu()),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "Выйти из игры", lambda: exit_game())
+        ]
 
-    create_menu("Змейка", buttons)
+        create_menu("Змейка", buttons)
 
+    elif lang == "en":
+        buttons = [
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "Start the Game", lambda: select_mode_menu("en")),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "Settings", lambda: run_settings_menu_en()),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "Exit to Desktop", lambda: exit_game())
+        ]
 
-def run_main_menu_en():
-    buttons = [
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Start the Game", lambda: select_mode_menu_en()),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Settings", lambda: run_settings_menu_en()),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Exit to Desktop", lambda: exit_game())
-    ]
-
-    create_menu("Snake: The Game", buttons)
-
-
-def select_mode_menu():
-    buttons = [
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Классический", lambda: run_game_loop("C", "ru")),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Современный", lambda: run_game_loop("M", "ru")),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Назад", run_main_menu)
-    ]
-
-    create_menu("Выберите режим игры", buttons, run_main_menu)
+        create_menu("Snake: The Game", buttons)
 
 
-def select_mode_menu_en():
-    buttons = [
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Classic Easy", lambda: run_game_loop("C", "en")),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Modern Hard", lambda: run_game_loop("M", "en")),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Back", run_main_menu_en)
-    ]
+def select_mode_menu(lang):
+    if lang == "ru":
+        buttons = [
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "Классический", lambda: run_game_loop("C", "ru")),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "Современный", lambda: run_game_loop("M", "ru")),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "Назад", lambda: run_main_menu("ru"))
+        ]
 
-    create_menu("Select the game mode", buttons, run_main_menu_en)
+        create_menu("Выберите режим игры", buttons, lambda: run_main_menu("ru"))
+
+    elif lang == "en":
+        buttons = [
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "Classic Easy", lambda: run_game_loop("C", "en")),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "Modern Hard", lambda: run_game_loop("M", "en")),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "Back", lambda: run_main_menu("en"))
+        ]
+
+        create_menu("Select the game mode", buttons, lambda: run_main_menu("en"))
 
 
 def run_settings_menu():
@@ -290,10 +290,10 @@ def run_settings_menu():
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
                "Язык", run_language_menu),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Назад", run_main_menu)
+               "Назад", lambda: run_main_menu("ru"))
     ]
 
-    create_menu("Настройки", buttons, run_main_menu)
+    create_menu("Настройки", buttons, lambda: run_main_menu("ru"))
 
 
 def run_settings_menu_en():
@@ -303,10 +303,10 @@ def run_settings_menu_en():
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
                "Language", run_language_menu_en),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Back", run_main_menu_en)
+               "Back", lambda: run_main_menu("en"))
     ]
 
-    create_menu("Settings", buttons, run_main_menu_en)
+    create_menu("Settings", buttons, lambda: run_main_menu("en"))
 
 
 def change_resolution(width, height, menu_callback):
@@ -381,7 +381,7 @@ def lose_game_menu(mode):
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT, "Начать заново",
                lambda: restart_game(mode, "ru")),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT, "Выйти в меню",
-               lambda: run_main_menu()),
+               lambda: run_main_menu("ru")),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
                "Выйти из игры", lambda: exit_game())
     ]
@@ -394,7 +394,7 @@ def lose_game_menu_en(mode):
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT, "Restart",
                lambda: restart_game(mode, "en")),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT, "Exit to Menu",
-               lambda: run_main_menu_en()),
+               lambda: run_main_menu("en")),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
                "Exit to Desktop", lambda: exit_game())
     ]
@@ -407,7 +407,7 @@ def new_high_score_menu(mode, score=0):
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT, "Начать заново",
                lambda: restart_game(mode, "ru")),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT, "Выйти в меню",
-               lambda: run_main_menu()),
+               lambda: run_main_menu("ru")),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
                "Выйти из игры", lambda: exit_game())
     ]
@@ -420,7 +420,7 @@ def new_high_score_menu_en(mode, score=0):
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT, "Restart",
                lambda: restart_game(mode, "en")),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT, "Exit to Menu",
-               lambda: run_main_menu_en()),
+               lambda: run_main_menu("en")),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
                "Exit to Desktop", lambda: exit_game())
     ]
@@ -714,4 +714,4 @@ def run_game_loop(mode, lang="ru"):
 
 if __name__ == "__main__":
     clock = pygame.time.Clock()
-    run_main_menu()
+    run_main_menu("ru")
