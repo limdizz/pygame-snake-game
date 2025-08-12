@@ -237,7 +237,7 @@ def run_main_menu(lang):
             Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
                    "Начать игру", lambda: select_mode_menu("ru")),
             Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
-                   "Настройки", lambda: run_settings_menu()),
+                   "Настройки", lambda: run_settings_menu("ru")),
             Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
                    "Выйти из игры", lambda: exit_game())
         ]
@@ -249,7 +249,7 @@ def run_main_menu(lang):
             Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
                    "Start the Game", lambda: select_mode_menu("en")),
             Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
-                   "Settings", lambda: run_settings_menu_en()),
+                   "Settings", lambda: run_settings_menu("en")),
             Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
                    "Exit to Desktop", lambda: exit_game())
         ]
@@ -283,30 +283,30 @@ def select_mode_menu(lang):
         create_menu("Select the game mode", buttons, lambda: run_main_menu("en"))
 
 
-def run_settings_menu():
-    buttons = [
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Разрешение", run_resolution_menu),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Язык", run_language_menu),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Назад", lambda: run_main_menu("ru"))
-    ]
+def run_settings_menu(lang):
+    if lang == "ru":
+        buttons = [
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "Разрешение", lambda: run_resolution_menu("ru")),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "Язык", run_language_menu),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "Назад", lambda: run_main_menu("ru"))
+        ]
 
-    create_menu("Настройки", buttons, lambda: run_main_menu("ru"))
+        create_menu("Настройки", buttons, lambda: run_main_menu("ru"))
 
+    elif lang == "en":
+        buttons = [
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "Resolution", lambda: run_resolution_menu("en")),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "Language", run_language_menu_en),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "Back", lambda: run_main_menu("en"))
+        ]
 
-def run_settings_menu_en():
-    buttons = [
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Resolution", run_resolution_menu_en),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Language", run_language_menu_en),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Back", lambda: run_main_menu("en"))
-    ]
-
-    create_menu("Settings", buttons, lambda: run_main_menu("en"))
+        create_menu("Settings", buttons, lambda: run_main_menu("en"))
 
 
 def change_resolution(width, height, menu_callback):
@@ -320,34 +320,34 @@ def change_resolution(width, height, menu_callback):
     menu_callback()
 
 
-def run_resolution_menu():
-    buttons = [
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "640x480", lambda: change_resolution(640, 480, run_resolution_menu)),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "800x600", lambda: change_resolution(800, 600, run_resolution_menu)),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "1280x720", lambda: change_resolution(1280, 720, run_resolution_menu)),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 410, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Назад", run_settings_menu)
-    ]
+def run_resolution_menu(lang):
+    if lang == "ru":
+        buttons = [
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "640x480", lambda: change_resolution(640, 480, lambda: run_resolution_menu("ru"))),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "800x600", lambda: change_resolution(800, 600, lambda: run_resolution_menu("ru"))),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "1280x720", lambda: change_resolution(1280, 720, lambda: run_resolution_menu("ru"))),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 410, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "Назад", lambda: run_settings_menu("ru"))
+        ]
 
-    create_menu("Разрешение", buttons, run_settings_menu)
+        create_menu("Разрешение", buttons, lambda: run_settings_menu("ru"))
 
+    elif lang == "en":
+        buttons = [
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "640x480", lambda: change_resolution(640, 480, lambda: run_resolution_menu("en"))),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "800x600", lambda: change_resolution(800, 600, lambda: run_resolution_menu("en"))),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "1280x720", lambda: change_resolution(1280, 720, lambda: run_resolution_menu("en"))),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 410, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "Back", lambda: run_settings_menu("en"))
+        ]
 
-def run_resolution_menu_en():
-    buttons = [
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "640x480", lambda: change_resolution(640, 480, run_resolution_menu_en)),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "800x600", lambda: change_resolution(800, 600, run_resolution_menu_en)),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "1280x720", lambda: change_resolution(1280, 720, run_resolution_menu_en)),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 410, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Back", run_settings_menu_en)
-    ]
-
-    create_menu("Resolution", buttons, run_settings_menu_en)
+        create_menu("Resolution", buttons, lambda: run_settings_menu("en"))
 
 
 def run_language_menu():
@@ -357,10 +357,10 @@ def run_language_menu():
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
                "English", run_language_menu_en),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Назад", run_settings_menu)
+               "Назад", lambda: run_settings_menu("ru"))
     ]
 
-    create_menu("Язык", buttons, run_settings_menu)
+    create_menu("Язык", buttons, lambda: run_settings_menu("ru"))
 
 
 def run_language_menu_en():
@@ -370,10 +370,10 @@ def run_language_menu_en():
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
                "English", run_language_menu_en),
         Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Back", run_settings_menu_en)
+               "Back", lambda: run_settings_menu("en"))
     ]
 
-    create_menu("Language", buttons, run_settings_menu_en)
+    create_menu("Language", buttons, lambda: run_settings_menu("en"))
 
 
 def lose_game_menu(mode):
