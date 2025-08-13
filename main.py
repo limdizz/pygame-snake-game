@@ -134,6 +134,7 @@ def display_current_score(score, lang):
     if lang == "ru":
         value = score_font.render("Счёт: " + str(score), True, WHITE)
         screen.blit(value, [25, 10])
+
     elif lang == "en":
         value = score_font.render("Your score: " + str(score), True, WHITE)
         screen.blit(value, [25, 10])
@@ -143,6 +144,7 @@ def display_high_score(high_score, lang):
     if lang == "ru":
         value = score_font.render("Рекорд: " + str(high_score), True, WHITE)
         screen.blit(value, [SCREEN_WIDTH - 220, 10])
+
     elif lang == "en":
         value = score_font.render("High score: " + str(high_score), True, WHITE)
         screen.blit(value, [SCREEN_WIDTH - 220, 10])
@@ -289,7 +291,7 @@ def run_settings_menu(lang):
             Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
                    "Разрешение", lambda: run_resolution_menu("ru")),
             Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
-                   "Язык", run_language_menu),
+                   "Язык", lambda: run_language_menu("ru")),
             Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
                    "Назад", lambda: run_main_menu("ru"))
         ]
@@ -301,7 +303,7 @@ def run_settings_menu(lang):
             Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
                    "Resolution", lambda: run_resolution_menu("en")),
             Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
-                   "Language", run_language_menu_en),
+                   "Language", lambda: run_language_menu("en")),
             Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
                    "Back", lambda: run_main_menu("en"))
         ]
@@ -350,82 +352,82 @@ def run_resolution_menu(lang):
         create_menu("Resolution", buttons, lambda: run_settings_menu("en"))
 
 
-def run_language_menu():
-    buttons = [
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Русский", run_language_menu),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "English", run_language_menu_en),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Назад", lambda: run_settings_menu("ru"))
-    ]
+def run_language_menu(lang):
+    if lang == "ru":
+        buttons = [
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "Русский", lambda: run_language_menu("ru")),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "English", lambda: run_language_menu("en")),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "Назад", lambda: run_settings_menu("ru"))
+        ]
 
-    create_menu("Язык", buttons, lambda: run_settings_menu("ru"))
+        create_menu("Язык", buttons, lambda: run_settings_menu("ru"))
 
+    elif lang == "en":
+        buttons = [
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "Русский", lambda: run_language_menu("ru")),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "English", lambda: run_language_menu("en")),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "Back", lambda: run_settings_menu("en"))
+        ]
 
-def run_language_menu_en():
-    buttons = [
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Русский", run_language_menu),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "English", run_language_menu_en),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Back", lambda: run_settings_menu("en"))
-    ]
-
-    create_menu("Language", buttons, lambda: run_settings_menu("en"))
-
-
-def lose_game_menu(mode):
-    buttons = [
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT, "Начать заново",
-               lambda: restart_game(mode, "ru")),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT, "Выйти в меню",
-               lambda: run_main_menu("ru")),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Выйти из игры", lambda: exit_game())
-    ]
-
-    create_menu("Вы проиграли", buttons)
+        create_menu("Language", buttons, lambda: run_settings_menu("en"))
 
 
-def lose_game_menu_en(mode):
-    buttons = [
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT, "Restart",
-               lambda: restart_game(mode, "en")),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT, "Exit to Menu",
-               lambda: run_main_menu("en")),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Exit to Desktop", lambda: exit_game())
-    ]
+def lose_game_menu(mode, lang):
+    if lang == "ru":
+        buttons = [
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT, "Начать заново",
+                   lambda: restart_game(mode, "ru")),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT, "Выйти в меню",
+                   lambda: run_main_menu("ru")),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "Выйти из игры", lambda: exit_game())
+        ]
 
-    create_menu("You lost", buttons)
+        create_menu("Вы проиграли", buttons)
+
+    elif lang == "en":
+        buttons = [
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT, "Restart",
+                   lambda: restart_game(mode, "en")),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT, "Exit to Menu",
+                   lambda: run_main_menu("en")),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "Exit to Desktop", lambda: exit_game())
+        ]
+
+        create_menu("You lost", buttons)
 
 
-def new_high_score_menu(mode, score=0):
-    buttons = [
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT, "Начать заново",
-               lambda: restart_game(mode, "ru")),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT, "Выйти в меню",
-               lambda: run_main_menu("ru")),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Выйти из игры", lambda: exit_game())
-    ]
+def new_high_score_menu(mode, score=0, lang="ru"):
+    if lang == "ru":
+        buttons = [
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT, "Начать заново",
+                   lambda: restart_game(mode, "ru")),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT, "Выйти в меню",
+                   lambda: run_main_menu("ru")),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "Выйти из игры", lambda: exit_game())
+        ]
 
-    create_menu(f"Новый рекорд: {score}", buttons)
+        create_menu(f"Новый рекорд: {score}", buttons)
 
+    elif lang == "en":
+        buttons = [
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT, "Restart",
+                   lambda: restart_game(mode, "en")),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT, "Exit to Menu",
+                   lambda: run_main_menu("en")),
+            Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
+                   "Exit to Desktop", lambda: exit_game())
+        ]
 
-def new_high_score_menu_en(mode, score=0):
-    buttons = [
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 200, BUTTON_WIDTH, BUTTON_HEIGHT, "Restart",
-               lambda: restart_game(mode, "en")),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 270, BUTTON_WIDTH, BUTTON_HEIGHT, "Exit to Menu",
-               lambda: run_main_menu("en")),
-        Button(SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 340, BUTTON_WIDTH, BUTTON_HEIGHT,
-               "Exit to Desktop", lambda: exit_game())
-    ]
-
-    create_menu(f"New High Score: {score}", buttons)
+        create_menu(f"New High Score: {score}", buttons)
 
 
 def restart_game(mode, lang="ru"):
@@ -493,25 +495,25 @@ def run_game_loop(mode, lang="ru"):
                 screen.fill(BLACK)
 
                 if mode == "C" and lang == "en":
-                    new_high_score_menu_en("C", high_score)
+                    new_high_score_menu("C", high_score, "en")
                 elif mode == "C" and lang == "ru":
-                    new_high_score_menu("C", high_score)
+                    new_high_score_menu("C", high_score, "ru")
 
                 if mode == "M" and lang == "en":
-                    new_high_score_menu_en("M", high_score)
+                    new_high_score_menu("M", high_score, "en")
                 elif mode == "M" and lang == "ru":
-                    new_high_score_menu("M", high_score)
+                    new_high_score_menu("M", high_score, "ru")
 
             else:
                 if mode == "C" and lang == "en":
-                    lose_game_menu_en("C")
+                    lose_game_menu("C", "en")
                 elif mode == "C" and lang == "ru":
-                    lose_game_menu("C")
+                    lose_game_menu("C", "ru")
 
                 if mode == "M" and lang == "en":
-                    lose_game_menu_en("M")
+                    lose_game_menu("M", "en")
                 elif mode == "M" and lang == "ru":
-                    lose_game_menu("M")
+                    lose_game_menu("M", "ru")
 
             display_current_score(current_score, "ru")
             display_high_score(high_score, "ru")
